@@ -1,4 +1,4 @@
-# Flutter State Management Examples
+aq# Flutter State Management Examples
 
 Este projeto demonstra diferentes estratégias de **gerenciamento de
 estado em aplicações Flutter**, comparando três abordagens amplamente
@@ -17,11 +17,6 @@ relacionadas a **desenvolvimento mobile e arquitetura de aplicações**.
 
 ------------------------------------------------------------------------
 
-# Repositório
-
-O projeto pode ser encontrado em:
-
-https://github.com/jeffersonspeck/state_mobile_aula01
 
 ------------------------------------------------------------------------
 
