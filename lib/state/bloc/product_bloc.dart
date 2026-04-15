@@ -1,14 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../models/product.dart';
+import '../../domain/entities/product.dart';
 import 'product_event.dart';
 import 'product_state.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   List<Product> _products = [
-    Product(id: '1', name: 'Notebook', price: 3500.0),
-    Product(id: '2', name: 'Mouse', price: 120.0),
-    Product(id: '3', name: 'Teclado', price: 250.0),
-    Product(id: '4', name: 'Monitor', price: 900.0),
+    Product(id: '1', name: 'Notebook', price: 3500.0, imageUrl: ''),
+    Product(id: '2', name: 'Mouse', price: 120.0, imageUrl: ''),
+    Product(id: '3', name: 'Teclado', price: 250.0, imageUrl: ''),
+    Product(id: '4', name: 'Monitor', price: 900.0, imageUrl: ''),
   ];
 
   ProductBloc() : super(ProductInitialState()) {

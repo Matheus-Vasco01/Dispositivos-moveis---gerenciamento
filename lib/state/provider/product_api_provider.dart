@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import '../../models/product.dart';
-import '../../services/product_service.dart';
+import '../../domain/entities/product.dart';
+import '../../domain/repositories/product_repository.dart';
 
 class ProductApiProvider extends ChangeNotifier {
+  final ProductRepository repository;
   List<Product> _products = [];
   bool _isLoading = false;
   String? _error;
+
+  ProductApiProvider({required this.repository});
 
   // Getters
   List<Product> get products => _products;
@@ -19,7 +22,7 @@ class ProductApiProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _products = await ProductService.fetchProducts();
+      _products = await repository.getProducts();
       _error = null;
     } catch (e) {
       _error = e.toString();
@@ -37,7 +40,7 @@ class ProductApiProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _products = await ProductService.fetchProductsByCategory(category);
+      _products = await repository.getProductsByCategory(category);
       _error = null;
     } catch (e) {
       _error = e.toString();

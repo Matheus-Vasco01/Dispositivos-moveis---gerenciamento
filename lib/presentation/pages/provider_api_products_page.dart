@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../domain/entities/product.dart';
 import '../../state/provider/product_api_provider.dart';
 import 'product_detail_page.dart';
 
@@ -112,6 +113,16 @@ class _ProviderApiProductPageState extends State<ProviderApiProductPage> {
                           ),
                         );
                       },
+                      leading: product.imageUrl != null
+                          ? Image.network(
+                              product.imageUrl!,
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(Icons.image_not_supported),
+                            )
+                          : const Icon(Icons.image),
                       title: Text(
                         product.name,
                         maxLines: 2,

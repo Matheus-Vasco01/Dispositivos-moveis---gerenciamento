@@ -1,13 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../models/product.dart';
-import '../../services/product_service.dart';
+import '../../domain/entities/product.dart';
+import '../../domain/repositories/product_repository.dart';
 import 'product_api_event.dart';
 import 'product_api_state.dart';
 
 class ProductApiBloc extends Bloc<ProductApiEvent, ProductApiState> {
+  final ProductRepository repository;
   List<Product> _products = [];
 
-  ProductApiBloc() : super(ProductApiInitialState()) {
+  ProductApiBloc({required this.repository}) : super(ProductApiInitialState()) {
     on<LoadProductsApiEvent>(_onLoadProducts);
     on<LoadProductsApiByCategory>(_onLoadProductsByCategory);
     on<ToggleFavoriteApiEvent>(_onToggleFavorite);
@@ -22,7 +23,7 @@ class ProductApiBloc extends Bloc<ProductApiEvent, ProductApiState> {
   ) async {
     emit(ProductApiLoadingState());
     try {
-      _products = await ProductService.fetchProducts();
+      _products = await repository.getProducts();
       emit(ProductApiLoadedState(_products));
     } catch (e) {
       emit(ProductApiErrorState('Erro ao carregar produtos: $e'));
@@ -36,7 +37,7 @@ class ProductApiBloc extends Bloc<ProductApiEvent, ProductApiState> {
   ) async {
     emit(ProductApiLoadingState());
     try {
-      _products = await ProductService.fetchProductsByCategory(event.category);
+      _products = await repository.getProductsByCategory(event.category);
       emit(ProductApiLoadedState(_products));
     } catch (e) {
       emit(ProductApiErrorState('Erro ao carregar produtos: $e'));

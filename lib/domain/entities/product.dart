@@ -11,7 +11,7 @@ class Product {
     required this.name,
     required this.price,
     this.description,
-    this.imageUrl,
+    required this.imageUrl,
     this.favorite = false,
   });
 
@@ -32,5 +32,29 @@ class Product {
       imageUrl: imageUrl ?? this.imageUrl,
       favorite: favorite ?? this.favorite,
     );
+  }
+
+  // Converter JSON para objeto Product
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      id: json['id'].toString(),
+      name: json['title'] ?? json['name'] ?? 'Produto sem nome',
+      price: (json['price'] as num).toDouble(),
+      description: json['description'],
+      imageUrl: json['image'] ?? json['imageUrl'],
+      favorite: json['favorite'] ?? false,
+    );
+  }
+
+  // Converter objeto Product para JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'price': price,
+      'description': description,
+      'imageUrl': imageUrl,
+      'favorite': favorite,
+    };
   }
 }

@@ -1,15 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../models/product.dart';
-import '../../services/product_service.dart';
+import '../../domain/entities/product.dart';
+import '../../domain/repositories/product_repository.dart';
 
 // Notifier para gerenciar a lista de produtos da API
 class ProductApiNotifier extends StateNotifier<List<Product>> {
-  ProductApiNotifier() : super([]);
+  final ProductRepository repository;
+  ProductApiNotifier({required this.repository}) : super([]);
 
   // Carregar produtos da API
   Future<void> loadProducts() async {
     try {
-      state = await ProductService.fetchProducts();
+      state = await repository.getProducts();
     } catch (e) {
       state = [];
     }
@@ -18,7 +19,7 @@ class ProductApiNotifier extends StateNotifier<List<Product>> {
   // Carregar produtos por categoria
   Future<void> loadProductsByCategory(String category) async {
     try {
-      state = await ProductService.fetchProductsByCategory(category);
+      state = await repository.getProductsByCategory(category);
     } catch (e) {
       state = [];
     }
@@ -46,8 +47,14 @@ class ProductApiNotifier extends StateNotifier<List<Product>> {
   }
 }
 
+// Provider para o Repositório (precisa ser inicializado ou usar um placeholder)
+final productRepositoryProvider = Provider<ProductRepository>((ref) {
+  throw UnimplementedError('Repositório não inicializado');
+});
+
 // Provider para produtos da API
 final productApiProvider =
     StateNotifierProvider<ProductApiNotifier, List<Product>>((ref) {
-  return ProductApiNotifier();
+  final repository = ref.watch(productRepositoryProvider);
+  return ProductApiNotifier(repository: repository);
 });

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../domain/entities/product.dart';
 import '../../state/riverpod/product_riverpod_api.dart';
 import 'product_detail_page.dart';
 
@@ -88,6 +89,16 @@ class _RiverpodApiProductPageState
                             ),
                           );
                         },
+                        leading: product.imageUrl != null
+                            ? Image.network(
+                                product.imageUrl!,
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    const Icon(Icons.image_not_supported),
+                              )
+                            : const Icon(Icons.image),
                         title: Text(
                           product.name,
                           maxLines: 2,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../domain/entities/product.dart';
 import '../../state/bloc/product_api_bloc.dart';
 import '../../state/bloc/product_api_event.dart';
 import '../../state/bloc/product_api_state.dart';
@@ -85,6 +86,16 @@ class _BlocApiProductPageState extends State<BlocApiProductPage> {
                             ),
                           );
                         },
+                        leading: product.imageUrl != null
+                            ? Image.network(
+                                product.imageUrl!,
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    const Icon(Icons.image_not_supported),
+                              )
+                            : const Icon(Icons.image),
                         title: Text(
                           product.name,
                           maxLines: 2,
