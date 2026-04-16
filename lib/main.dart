@@ -16,6 +16,8 @@ import 'data/datasources/product_remote_data_source.dart';
 import 'data/datasources/product_local_data_source.dart';
 import 'data/repositories/product_repository_impl.dart';
 
+import 'package:google_fonts/google_fonts.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -64,7 +66,74 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'State Management Patterns',
+      title: 'Loja de Produtos',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF6B1123),
+          primary: const Color(0xFF6B1123),
+          surface: const Color(0xFFFDFBF9),
+        ),
+        scaffoldBackgroundColor: const Color(0xFFFDFBF9),
+        textTheme: GoogleFonts.montserratTextTheme(
+          Theme.of(context).textTheme,
+        ).copyWith(
+          displayLarge: GoogleFonts.playfairDisplay(
+            fontWeight: FontWeight.bold,
+            color: const Color(0xFF6B1123),
+          ),
+          displayMedium: GoogleFonts.playfairDisplay(
+            fontWeight: FontWeight.bold,
+            color: const Color(0xFF6B1123),
+          ),
+          headlineLarge: GoogleFonts.playfairDisplay(
+            fontWeight: FontWeight.bold,
+            color: const Color(0xFF6B1123),
+          ),
+          headlineMedium: GoogleFonts.playfairDisplay(
+            fontWeight: FontWeight.bold,
+            color: const Color(0xFF6B1123),
+          ),
+          titleLarge: GoogleFonts.playfairDisplay(
+            fontWeight: FontWeight.bold,
+            color: const Color(0xFF6B1123),
+          ),
+        ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: const Color(0xFFFDFBF9),
+          elevation: 0,
+          centerTitle: true,
+          titleTextStyle: GoogleFonts.playfairDisplay(
+            color: const Color(0xFF6B1123),
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+          iconTheme: const IconThemeData(color: Color(0xFF6B1123)),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF6B1123),
+            foregroundColor: Colors.white,
+            textStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w600),
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            foregroundColor: const Color(0xFF6B1123),
+            side: const BorderSide(color: Color(0xFF6B1123)),
+            textStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w600),
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
+      ),
       home: const HomePage(),
     );
   }
