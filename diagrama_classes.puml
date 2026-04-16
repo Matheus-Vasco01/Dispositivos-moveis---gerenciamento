@@ -1,0 +1,134 @@
+@startuml Diagrama de Classes - mobile_arquitetura_02
+
+skinparam backgroundColor #FDFBF9
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam class {
+    BackgroundColor White
+    ArrowColor #6B1123
+    BorderColor #6B1123
+}
+
+package "Core Layer" {
+    abstract class Failure {
+        + String message
+    }
+    class ServerFailure extends Failure
+    class CacheFailure extends Failure
+    class NetworkFailure extends Failure
+}
+
+package "Domain Layer" {
+    package "Entities" {
+        class Product {
+            + String id
+            + String name
+            + double price
+            + String? description
+            + String? imageUrl
+            + bool favorite
+            + copyWith()
+            + {static} fromJson()
+            + toJson()
+        }
+    }
+    package "Repositories" {
+        interface ProductRepository {
+            + getProducts(): Future<List<Product>>
+            + getProductsByCategory(String): Future<List<Product>>
+            + getCategories(): Future<List<String>>
+        }
+    }
+}
+
+package "Data Layer" {
+    package "Models" {
+        class ProductModel extends Product {
+            + {static} fromJson()
+            + toJson()
+        }
+    }
+    package "DataSources" {
+        interface ProductRemoteDataSource {
+            + getProducts()
+            + getProductsByCategory()
+            + getCategories()
+        }
+        class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
+            - http.Client client
+        }
+        interface ProductLocalDataSource {
+            + getLastProducts()
+            + cacheProducts()
+        }
+        class ProductLocalDataSourceImpl implements ProductLocalDataSource {
+            - SharedPreferences sharedPreferences
+        }
+    }
+    class ProductRepositoryImpl implements ProductRepository {
+        - ProductRemoteDataSource remoteDataSource
+        - ProductLocalDataSource localDataSource
+    }
+}
+
+package "State Layer" {
+    package "BLoC" {
+        class ProductApiBloc {
+            - ProductRepository repository
+            - List<Product> _products
+            + on<LoadProductsApiEvent>()
+            + on<ToggleFavoriteApiEvent>()
+        }
+        abstract class ProductApiEvent
+        abstract class ProductApiState
+    }
+    package "Provider" {
+        class ProductApiProvider {
+            - ProductRepository repository
+            + List<Product> products
+            + bool isLoading
+            + loadProducts()
+            + toggleFavorite()
+        }
+    }
+    package "Riverpod" {
+        class ProductApiNotifier {
+            - ProductRepository repository
+            + loadProducts()
+            + toggleFavorite()
+        }
+    }
+}
+
+package "Presentation Layer" {
+    class HomePage <<Widget>>
+    class BlocApiProductPage <<Widget>>
+    class ProviderApiProductPage <<Widget>>
+    class RiverpodApiProductPage <<Widget>>
+    class ProductDetailPage <<Widget>>
+}
+
+' Relacionamentos
+ProductRepositoryImpl --> ProductRemoteDataSource : uses
+ProductRepositoryImpl --> ProductLocalDataSource : uses
+ProductRepositoryImpl ..> ProductModel : converts to
+
+ProductApiBloc --> ProductRepository : uses
+ProductApiProvider --> ProductRepository : uses
+ProductApiNotifier --> ProductRepository : uses
+
+BlocApiProductPage ..> ProductApiBloc : listens
+ProviderApiProductPage ..> ProductApiProvider : listens
+RiverpodApiProductPage ..> ProductApiNotifier : listens
+
+HomePage ..> BlocApiProductPage : navigates
+HomePage ..> ProviderApiProductPage : navigates
+HomePage ..> RiverpodApiProductPage : navigates
+
+BlocApiProductPage ..> ProductDetailPage : navigates
+ProviderApiProductPage ..> ProductDetailPage : navigates
+RiverpodApiProductPage ..> ProductDetailPage : navigates
+
+ProductDetailPage o-- Product : displays
+
+@enduml
